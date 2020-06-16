@@ -3,11 +3,7 @@ require 'base64'
 module Arweave
   class Client
     def initialize
-      @api = Api.new(
-        scheme:   self.class.configuration&.scheme   || 'https',
-        host:     self.class.configuration&.host     || 'arweave.net',
-        port:     self.class.configuration&.port     || '443',
-      )
+      @api = Api.instance
     end
 
     def create_transaction(wallet:, **attributes)

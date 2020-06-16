@@ -35,6 +35,10 @@ module Arweave
       signature
     end
 
+    def commit
+      Api.instance.commit(self)
+    end
+
     private
 
     def get_signature_data
