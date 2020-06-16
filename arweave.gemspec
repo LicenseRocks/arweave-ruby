@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
+  spec.add_dependency 'json-jwt', '~> 1.13'
   spec.add_dependency 'httparty', '~> 0.18.1'
   spec.add_development_dependency 'byebug', '~> 11.1'
 end

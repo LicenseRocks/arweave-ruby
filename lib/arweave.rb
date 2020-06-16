@@ -1,3 +1,5 @@
 require 'arweave/version'
-
-module Arweave; end
+require 'arweave/client'
+require 'arweave/api'
+require 'arweave/transaction'
+require 'arweave/wallet'
