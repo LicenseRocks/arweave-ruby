@@ -6,11 +6,12 @@ module Arweave
 
     class << self
       def instance
-        @instance ||= new(
-          scheme:   Client.configuration&.scheme   || 'https',
-          host:     Client.configuration&.host     || 'arweave.net',
-          port:     Client.configuration&.port     || '443',
-        )
+        @instance ||=
+          new(
+            scheme: Client.configuration&.scheme || 'https',
+            host: Client.configuration&.host || 'arweave.net',
+            port: Client.configuration&.port || '443'
+          )
       end
     end
 
@@ -18,18 +19,24 @@ module Arweave
       self.class.get('/tx_anchor')
     end
 
-    def reward(byte_size, address='')
+    def reward(byte_size, address = '')
       self.class.get("/price/#{byte_size}/#{address}")
     end
 
     def commit(transaction)
-      self.class.post('/tx', body: transaction.attributes.to_json, headers: { 'Content-Type' => 'application/json' })
+      self.class.post(
+        '/tx',
+        body: transaction.attributes.to_json,
+        headers: { 'Content-Type' => 'application/json' }
+      )
     end
 
     private
 
     def initialize(scheme:, host:, port:)
-      self.class.base_uri URI::Generic.build(scheme: scheme, host: host, port: port).to_s
+      self.class.base_uri URI::Generic.build(
+                            scheme: scheme, host: host, port: port
+                          ).to_s
     end
   end
 end

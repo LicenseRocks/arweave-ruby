@@ -28,8 +28,10 @@ module Arweave
     def sign(wallet)
       signature = wallet.sign(get_signature_data)
 
-      @attributes[:signature] = Base64.urlsafe_encode64 signature, padding: false
-      @attributes[:id] = Base64.urlsafe_encode64 Digest::SHA256.digest(signature), padding: false
+      @attributes[:signature] =
+        Base64.urlsafe_encode64 signature, padding: false
+      @attributes[:id] =
+        Base64.urlsafe_encode64 Digest::SHA256.digest(signature), padding: false
 
       # TODO: verify signature
       signature

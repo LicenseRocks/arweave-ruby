@@ -22,7 +22,11 @@ module Arweave
     end
 
     def sign(message)
-      private_key.sign_pss('SHA256', message, salt_length: 0, mgf1_hash: 'SHA256')
+      private_key.sign_pss(
+        'SHA256',
+        message,
+        salt_length: 0, mgf1_hash: 'SHA256'
+      )
     end
 
     private
