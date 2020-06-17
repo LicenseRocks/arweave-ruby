@@ -39,6 +39,13 @@ module Arweave
       Transaction.new(JSON.parse(res.body))
     end
 
+    def get_transaction_data(transaction_id)
+      res = api.get_transaction_data(transaction_id)
+      raise TransactionNotFound if res.not_found?
+
+      Base64.urlsafe_decode64(res.body)
+    end
+
     def commit(transaction)
       api.commit(transaction)
     end
