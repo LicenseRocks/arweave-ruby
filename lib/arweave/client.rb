@@ -46,6 +46,21 @@ module Arweave
       Base64.urlsafe_decode64(res.body)
     end
 
+    def get_transaction_status(transaction_id)
+      res = api.get_transaction_status(transaction_id)
+      raise TransactionNotFound if res.not_found?
+
+      {
+        status: :accepted,
+        data: JSON.parse(res.body).transform_keys(&:to_sym)
+      }
+    rescue JSON::ParserError
+      {
+        status: :pending,
+        data: {}
+      }
+    end
+
     def commit(transaction)
       api.commit(transaction)
     end

@@ -27,6 +27,10 @@ module Arweave
       self.class.get("/tx/#{transaction_id}/data")
     end
 
+    def get_transaction_status(transaction_id)
+      self.class.get("/tx/#{transaction_id}/status")
+    end
+
     def reward(byte_size, address = '')
       self.class.get("/price/#{byte_size}/#{address}")
     end
