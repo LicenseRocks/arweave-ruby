@@ -61,6 +61,14 @@ module Arweave
       }
     end
 
+    def get_last_transaction(wallet)
+      api.get_last_transaction(wallet.address).body
+    end
+
+    def get_transaction_anchor
+      api.get_transaction_anchor.body
+    end
+
     def commit(transaction)
       api.commit(transaction)
     end
