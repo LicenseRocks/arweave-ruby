@@ -19,6 +19,10 @@ module Arweave
       self.class.get('/tx_anchor')
     end
 
+    def get_transaction(transaction_id)
+      self.class.get("/tx/#{transaction_id}")
+    end
+
     def reward(byte_size, address = '')
       self.class.get("/price/#{byte_size}/#{address}")
     end

@@ -32,6 +32,13 @@ module Arweave
       transaction
     end
 
+    def get_transaction(transaction_id)
+      res = api.get_transaction(transaction_id)
+      raise TransactionNotFound if res.not_found?
+
+      Transaction.new(JSON.parse(res.body))
+    end
+
     def commit(transaction)
       api.commit(transaction)
     end
