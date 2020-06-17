@@ -35,6 +35,10 @@ module Arweave
       self.class.get("/wallet/#{wallet_address}/last_tx")
     end
 
+    def get_wallet_balance(wallet_address)
+      self.class.get("/wallet/#{wallet_address}/balance")
+    end
+
     def reward(byte_size, address = '')
       self.class.get("/price/#{byte_size}/#{address}")
     end

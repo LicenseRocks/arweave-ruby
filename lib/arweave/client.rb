@@ -69,6 +69,10 @@ module Arweave
       api.get_transaction_anchor.body
     end
 
+    def get_balance(wallet)
+      api.get_wallet_balance(wallet.address).body
+    end
+
     def commit(transaction)
       api.commit(transaction)
     end
