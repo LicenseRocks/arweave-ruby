@@ -1,12 +1,14 @@
 require 'json/jwt'
 require 'base64'
 require 'digest'
+require 'ostruct'
 
 module Arweave
   class Wallet
-    attr_reader :address, :owner
+    attr_reader :address, :owner, :api
 
     def initialize(jwk)
+      @api = Api.instance
       @jwk = jwk.transform_keys!(&:to_sym)
     end
 
@@ -27,6 +29,19 @@ module Arweave
         message,
         salt_length: 0, mgf1_hash: 'SHA256'
       )
+    end
+
+    def balance
+      balance_in_winstons = BigDecimal(api.get_wallet_balance(address).body)
+
+      OpenStruct.new(
+        ar: balance_in_winstons / 1e12,
+        winston: balance_in_winstons
+      )
+    end
+
+    def last_transaction_id
+      api.get_last_transaction_id(address).body
     end
 
     private
