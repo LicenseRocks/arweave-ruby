@@ -31,7 +31,7 @@ module Arweave
       self.class.get("/tx/#{transaction_id}/status")
     end
 
-    def get_last_transaction(wallet_address)
+    def get_last_transaction_id(wallet_address)
       self.class.get("/wallet/#{wallet_address}/last_tx")
     end
 

@@ -16,29 +16,74 @@ module Arweave
           data: '',
           reward: '0',
           signature: ''
-        }.merge(attributes).yield_self do |hash|
-          hash.each do |key, value|
-            value.respond_to?(:map) ? hash[key] = value : hash[key] = value.to_s
+        }.merge(attributes).transform_keys!(&:to_sym).yield_self do |hash|
+          if hash[:data]
+            hash[:data] = Base64.urlsafe_encode64(hash[:data], padding: false)
           end
-
           hash
-        end.transform_keys!(&:to_sym)
+        end
     end
 
     def sign(wallet)
-      signature = wallet.sign(get_signature_data)
+      @attributes[:last_tx] = self.class.anchor
+      @attributes[:reward] =
+        Api.instance.reward(
+          @attributes.fetch(:data, '').length,
+          @attributes.fetch(:target, nil)
+        ).body
+      @attributes[:owner] = wallet.owner
 
+      signature = wallet.sign(get_signature_data)
       @attributes[:signature] =
         Base64.urlsafe_encode64 signature, padding: false
       @attributes[:id] =
         Base64.urlsafe_encode64 Digest::SHA256.digest(signature), padding: false
 
       # TODO: verify signature
-      signature
+      self
     end
 
     def commit
+      raise Arweave::TransactionNotSigned if @attributes[:signature].empty?
+
       Api.instance.commit(self)
+      self
+    end
+
+    class << self
+      def anchor
+        Api.instance.get_transaction_anchor.body
+      end
+
+      def find(id)
+        res = Api.instance.get_transaction(id)
+        raise TransactionNotFound if res.not_found?
+        data =
+          JSON.parse(res.body).transform_keys!(&:to_sym).yield_self do |hash|
+            hash[:data] = Base64.urlsafe_decode64(hash[:data]) if hash[:data]
+            hash
+          end
+
+        new(data)
+      end
+
+      def data(id)
+        res = Api.instance.get_transaction_data(id)
+        raise TransactionNotFound if res.not_found?
+
+        Base64.urlsafe_decode64(res.body)
+      end
+
+      def status(id)
+        res = Api.instance.get_transaction_status(id)
+        raise TransactionNotFound if res.not_found?
+
+        {
+          status: :accepted, data: JSON.parse(res.body).transform_keys(&:to_sym)
+        }
+      rescue JSON::ParserError
+        { status: :pending, data: {} }
+      end
     end
 
     private
