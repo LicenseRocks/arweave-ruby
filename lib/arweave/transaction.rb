@@ -78,11 +78,33 @@ module Arweave
         res = Api.instance.get_transaction_status(id)
         raise TransactionNotFound if res.not_found?
 
-        {
-          status: :accepted, data: JSON.parse(res.body).transform_keys(&:to_sym)
-        }
+        create_status_object(:accepted, JSON.parse(res.body).transform_keys!(&:to_sym))
       rescue JSON::ParserError
-        { status: :pending, data: {} }
+        create_status_object(:pending, {})
+      end
+
+      def create_status_object(status, data)
+        status_object = OpenStruct.new(status: status, data: data)
+
+        status_object.instance_eval do
+          def accepted?
+            status == :accepted
+          end
+
+          def pending?
+            status == :pending
+          end
+
+          def to_s
+            status.to_s
+          end
+
+          def to_sym
+            status
+          end
+        end
+
+        status_object
       end
     end
 
