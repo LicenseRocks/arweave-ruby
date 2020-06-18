@@ -2,9 +2,7 @@
 Ruby flavoured Arweave
 
 ## installation
-Simply run
-
-`gem install arweave`
+Run `gem install arweave`
 
 or put the gem into your gemfile:
 ```ruby
@@ -29,7 +27,7 @@ For a complete list of arguments you can pass to the `new` method,
 checkout the [documentation](https://docs.arweave.org/developers/server/http-api#submit-a-transaction).
 
 ```ruby
-jwk = JSON.parse(File.read(File.expand_path(File.join('path-to-keyfile'))))
+jwk = JSON.parse(File.read('/path/to/arweave-keyfile.json'))
 wallet = Arweave::Wallet.new jwk
 
 transaction = Arweave::Transaction.new(data: '<b>test</b>')
@@ -64,17 +62,20 @@ Arweave::Transaction.data('tSF6pxiknBk0hBUTkdzq02E0zvsrT0xe4UtCzZit-bz')
 ```
 
 ### Getting transaction status
-the `status` class method returns a hash containing transaction status
-(which is pending or accepted) and the and the data and a hash about the block.
+the `status` class method returns an open struct that responds to `pending?` and
+`accepted?` methods. If you need the text status, you can use `to_s` and
+`to_sym` methods. To see the status JSON data, use the `data` method.
 ```ruby
-Arweave::Transaction.status('tSF6pxiknBk0hBUTkdzq02E0zvsrT0xe4UtCzZit-bz')
+status = Arweave::Transaction.status('tSF6pxiknBk0hBUTkdzq02E0zvsrT0xe4UtCzZit-bz')
+status.pending? # => false
+status.accepted? # => true
+status.to_s # => "accepted"
+status.to_sym # => :accepted
+status.data
 # => {
-#   "status": "accepted",
-#   "data": {
-#     "block_height": 468306,
-#     "block_indep_hash": "hh0ceHGfEOuTQWYMXGNzb2AabezqZUhtSw5vtUPKTtGmkViPArX5WeLBKBYZIwlS",
-#     "number_of_confirmations": 388
-#   }
+#   "block_height": 468306,
+#   "block_indep_hash": "hh0ceHGfEOuTQWYMXGNzb2AabezqZUhtSw5vtUPKTtGmkViPArX5WeLBKBYZIwlS",
+#   "number_of_confirmations": 388
 # }
 ```
 
