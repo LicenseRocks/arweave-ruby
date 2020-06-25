@@ -1,5 +1,8 @@
 # Arweave Ruby SDK
-Ruby flavoured Arweave
+Got any important data that should be accessable for mankind in the future?
+Love to build great things with Ruby?
+Here comes your Ruby flavoured Arweave SDK solution. 
+Combine arweave's permanent storage solution and Ruby, so that your data will be stored for 200 years plus and create like that your own precious data Ruby.  
 
 ## installation
 Run `gem install arweave`
@@ -42,7 +45,7 @@ Arweave::Transaction.new(data: '<b>test</b>').sign(wallet).commit
 # => #<Arweavev::Transaction:0x00007f9b61299330 @attributes={...}>
 ```
 
-You can get the transaction attributes from the attribuets hash:
+You can get the transaction attributes from the attributes hash:
 ```ruby
 transaction.attributes[:id]
 # => "tSF6pxiknBk0hBUTkdzq02E0zvsrT0xe4UtCzZit-bz"
