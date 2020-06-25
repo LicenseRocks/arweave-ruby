@@ -4,7 +4,7 @@ Love to build great things with Ruby?
 Here comes your Ruby flavoured Arweave SDK solution. 
 Combine arweave's permanent storage solution and Ruby, so that your data will be stored for 200 years plus and create like that your own precious data Ruby.  
 
-## installation
+## Installation
 Run `gem install arweave`
 
 or put the gem into your gemfile:
