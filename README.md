@@ -1,8 +1,8 @@
 # Arweave Ruby SDK
 Got any important data that should be accessable for mankind in the future?
 Love to build great things with Ruby?
-Here comes your Ruby flavoured Arweave SDK solution. 
-Combine arweave's permanent storage solution and Ruby, so that your data will be stored for 200 years plus and create like that your own precious data Ruby.  
+Here comes your Ruby flavoured Arweave SDK solution.
+Combine arweave's permanent storage solution and Ruby, so that your data will be stored for 200 years plus and create like that your own precious data Ruby.
 
 ## Installation
 Run `gem install arweave`
@@ -49,6 +49,22 @@ You can get the transaction attributes from the attributes hash:
 ```ruby
 transaction.attributes[:id]
 # => "tSF6pxiknBk0hBUTkdzq02E0zvsrT0xe4UtCzZit-bz"
+```
+
+### Adding tags
+You can add tags to a transaction using `add_tag` method:
+```ruby
+transaction.add_tag(name: 'tag_name', value: 'tag_value')
+# => #<Arweavev::Transaction:0x00007f9b61299330 @attributes={...}>
+```
+
+**NOTE**: You should add tags before commiting the transaction, because once the
+transcation created, then you can't modify it and add tags to it.
+
+You can also retrieve tags using `tags` method on the transaction instance:
+```ruby
+transaction.tags
+# => [{ :name => "tag_name", :value => "tag_value" }]
 ```
 
 ### Find transaction by id

@@ -50,6 +50,27 @@ module Arweave
       self
     end
 
+    def add_tag(name:, value:)
+      attributes[:tags].push(
+        {
+          name: Base64.urlsafe_encode64(name, padding: false),
+          value: Base64.urlsafe_encode64(value, padding: false)
+        }
+      )
+
+      self
+    end
+
+    def tags
+      attributes[:tags].map do |tag|
+        tag.transform_keys!(&:to_sym)
+        {
+          name: Base64.urlsafe_decode64(tag[:name]),
+          value: Base64.urlsafe_decode64(tag[:value])
+        }
+      end
+    end
+
     class << self
       def anchor
         Api.instance.get_transaction_anchor.body
@@ -78,7 +99,10 @@ module Arweave
         res = Api.instance.get_transaction_status(id)
         raise TransactionNotFound if res.not_found?
 
-        create_status_object(:accepted, JSON.parse(res.body).transform_keys!(&:to_sym))
+        create_status_object(
+          :accepted,
+          JSON.parse(res.body).transform_keys!(&:to_sym)
+        )
       rescue JSON::ParserError
         create_status_object(:pending, {})
       end
@@ -123,8 +147,10 @@ module Arweave
     end
 
     def tags_string
-      # TODO: Create tags string
-      ''
+      attributes.fetch(:tags).reduce('') do |acc, tag|
+        acc + Base64.urlsafe_decode64(tag[:name]) +
+          Base64.urlsafe_decode64(tag[:value])
+      end
     end
   end
 end
