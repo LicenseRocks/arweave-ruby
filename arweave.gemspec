@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Arweave SDK}
   spec.description   = %q{Ruby SDK for Arweave decentralized services}
   spec.homepage      = 'https://github.com/LicenseRocks/arweave-ruby'
-  spec.license       = 'GPL v3'
+  spec.license       = 'GPL-3.0'
   spec.required_ruby_version = Gem::Requirement.new('>= 2.3.0')
 
   spec.metadata['homepage_uri'] = spec.homepage

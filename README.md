@@ -130,3 +130,47 @@ balance.winston.to_i # => 249891527825
 ```ruby
 wallet.last_transaction_id # => "BsHjWHBwSlmW_VgOcgLmsQacQjpohmvVDLMMVyuAkie"
 ```
+
+## Directories
+Directories are an abstract logical grouping around transactions which is implemented using path manifests. For more information, you can take a look at [path manifests](https://github.com/ArweaveTeam/arweave/wiki/Path-Manifests) documentation.
+
+### Create a directory
+To create a directory, first you must have transaction ids you want to put under the new directory and then specify a name for them.
+```ruby
+directory = Arweave::Directory.new(paths: { 'index.html' => 'BsHjWHBwSlmW_VgOcgLmsQacQjpohmvVDLMMVyuAkie' })
+# => #<Arweave::Directory:0x00007ff3400b2350 @paths={...}>
+```
+Then you should get the transaction out of the directory instance and commit it.
+```ruby
+transaction = directory.transaction
+# => #<Arweavev::Transaction:0x00007f9b61299330 @attributes={...}>
+transaction.sign(wallet).commit
+# => #<Arweavev::Transaction:0x00007f9b61299330 @attributes={...}>
+```
+Then you can check your files in the directory using the name you've specified for the files. The endpoint for checking directory files is `/:dir_transaction_id/:filename`. For example
+```
+https:/arweave.net/JxiKsfr2es55AuCTSZg5oJLz7j4phRgireZt5SpChE/index.html
+```
+
+### Directory index
+Arweave creates an HTML file to index your files in a directory, but if you like, you can set one of the files in the paths argument as index file.
+```ruby
+directory =
+  Arweave::Directory.new(
+    index: 'index.html',
+    paths: {
+      'index.html' => 'BsHjWHBwSlmW_VgOcgLmsQacQjpohmvVDLMMVyuAkie',
+      'contact.html' => '-3U2-Oks289pQPH0Umz9Fy0G1Ti2UMlQYIr7NGIYL_M',
+    }
+  ) # => #<Arweave::Directory:0x00007ff3400b2350 @index="...", @paths={...}>
+```
+
+### Adding files to a directory
+You can add files to a directory using the `add` method on a directory instance.
+```ruby
+directory.add('about.html' => 'LhT2WHBwFbv9_Pey67LmsQacQjpZxsyjDLMMVyuAkie')
+# => #<Arweave::Directory:0x00007ff3400b2350 @index="...", @paths={...}>
+```
+**NOTE**: You should add the files to the directory before commiting the transaction,
+else nothing will be added to the directory. In case you want to modify your directory,
+you should create a new transaction for that.
